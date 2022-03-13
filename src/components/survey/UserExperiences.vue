@@ -11,7 +11,11 @@
 
       <p v-if="isLoading">Loading...</p>
 
-      <ul v-if="!isLoading">
+      <p v-if="!isLoading && results.length === 0">
+        No stored experiences found.
+      </p>
+
+      <ul v-if="!isLoading && results.length > 0">
         <survey-result
           v-for="result in results"
           :key="result.id"
