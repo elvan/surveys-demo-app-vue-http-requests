@@ -47,6 +47,8 @@
           One or more input fields are invalid. Please check your provided data.
         </p>
 
+        <p v-if="error">{{ error }}</p>
+
         <div>
           <base-button>Submit</base-button>
         </div>
@@ -64,10 +66,9 @@ export default {
       enteredName: '',
       chosenRating: null,
       invalidInput: false,
+      error: '',
     };
   },
-
-  // emits: ['survey-submit'],
 
   methods: {
     submitSurvey() {
@@ -76,11 +77,6 @@ export default {
         return;
       }
       this.invalidInput = false;
-
-      // this.$emit('survey-submit', {
-      //   userName: this.enteredName,
-      //   rating: this.chosenRating,
-      // });
 
       fetch(DATABASE + 'surveys.json', {
         method: 'POST',
@@ -91,7 +87,17 @@ export default {
           userName: this.enteredName,
           rating: this.chosenRating,
         }),
-      });
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+
+          throw new Error(response.statusText);
+        })
+        .catch((error) => {
+          this.error = error;
+        });
 
       this.enteredName = '';
       this.chosenRating = null;

@@ -11,9 +11,9 @@
 
       <p v-if="isLoading">Loading...</p>
 
-      <p v-if="!isLoading && error !== ''">Error: {{ error }}</p>
+      <p v-if="!isLoading && error">{{ error }}</p>
 
-      <p v-if="!isLoading && error === '' && results.length === 0">
+      <p v-if="!isLoading && !error && results.length === 0">
         No stored experiences found.
       </p>
 
@@ -35,8 +35,6 @@ import SurveyResult from './SurveyResult.vue';
 const DATABASE = process.env.VUE_APP_DATABASE;
 
 export default {
-  // props: ['results'],
-
   data() {
     return {
       results: [],
