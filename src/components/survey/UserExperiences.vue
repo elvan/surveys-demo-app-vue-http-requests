@@ -9,7 +9,9 @@
         >
       </div>
 
-      <ul>
+      <p v-if="isLoading">Loading...</p>
+
+      <ul v-if="!isLoading">
         <survey-result
           v-for="result in results"
           :key="result.id"
@@ -32,6 +34,7 @@ export default {
   data() {
     return {
       results: [],
+      isLoading: false,
     };
   },
 
@@ -41,6 +44,8 @@ export default {
 
   methods: {
     loadExperiences() {
+      this.isLoading = true;
+
       fetch(DATABASE + 'surveys.json')
         .then((response) => {
           if (response.ok) {
@@ -56,6 +61,9 @@ export default {
               rating: data[key].rating,
             };
           });
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },
