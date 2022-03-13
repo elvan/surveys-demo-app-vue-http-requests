@@ -11,7 +11,9 @@
 
       <p v-if="isLoading">Loading...</p>
 
-      <p v-if="!isLoading && results.length === 0">
+      <p v-if="!isLoading && error !== ''">Error: {{ error }}</p>
+
+      <p v-if="!isLoading && error === '' && results.length === 0">
         No stored experiences found.
       </p>
 
@@ -39,6 +41,7 @@ export default {
     return {
       results: [],
       isLoading: false,
+      error: '',
     };
   },
 
@@ -57,6 +60,11 @@ export default {
           }
         })
         .then((data) => {
+          if (!data) {
+            this.error = 'No data found';
+            return;
+          }
+
           // Transform the data into a format that is easier to work with.
           this.results = Object.keys(data).map((key) => {
             return {
@@ -65,6 +73,10 @@ export default {
               rating: data[key].rating,
             };
           });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.error = error;
         })
         .finally(() => {
           this.isLoading = false;
